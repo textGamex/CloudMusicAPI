@@ -1,4 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿/** 
+ * License: MIT License
+ * Copyright (c) 2018 GEEKiDoS
+ * URL: https://github.com/GEEKiDoS/NeteaseMuiscApi
+ */
+
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;

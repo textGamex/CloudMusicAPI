@@ -1,4 +1,10 @@
-﻿using System;
+﻿/** 
+ * License: MIT License
+ * Copyright (c) 2018 GEEKiDoS
+ * URL: https://github.com/GEEKiDoS/NeteaseMuiscApi
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
