@@ -48,7 +48,7 @@ namespace NeteaseCloudMusicAPI
 
             public Lyric(long musicId)
             {
-                var data = api.Lyric(musicId);
+                var data = api.Lyrics(musicId);
                 Lyrics = data.Lrc.Lyric;
                 LyricKrc = data.Klyric.lyric;
                 Translation = data.Tlyric.Lyric;

@@ -174,8 +174,7 @@ namespace NeteaseCloudMusicAPI
         /// </summary>
         /// <param name="songId">音乐ID</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public LyricResult Lyric(long songId)
+        public LyricsResult Lyrics(long songId)
         {
             string url = "https://music.163.com/weapi/song/lyric?csrf_token=";
             var data = new Dictionary<string, string> 
@@ -184,14 +183,14 @@ namespace NeteaseCloudMusicAPI
                 { "os","pc" },
                 { "lv", "1" },
                 { "kv", "1" },
-                { "tv", "-1" },
+                { "tv", "1" },
                 { "csrf_token","" }
             };
 
             var da = JsonConvert.SerializeObject(data);
-            log.Info(da);
+
             string raw = CURL(url, Prepare(da));
-            var deserialedObj = JsonConvert.DeserializeObject<LyricResult>(raw);
+            var deserialedObj = JsonConvert.DeserializeObject<LyricsResult>(raw);
             return deserialedObj;        
         }
 
@@ -200,8 +199,8 @@ namespace NeteaseCloudMusicAPI
             string url = "http://music.163.com/weapi/mv/detail?csrf_token=";
             var data = new Dictionary<string, string> 
             {
-                { "id",mv_id.ToString() },
-                { "csrf_token","" },
+                { "id", mv_id.ToString() },
+                { "csrf_token", "" },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
             var deserialedObj = JsonConvert.DeserializeObject<MVResult>(
@@ -235,14 +234,14 @@ namespace NeteaseCloudMusicAPI
 
         private string CreateSecretKey(int length)
         {
-            var str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var r = "";
+            const string str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var sb = new StringBuilder();
             var rnd = new Random();
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; ++i)
             {
-                r += str[rnd.Next(0, str.Length)];
+                sb.Append(str[rnd.Next(0, str.Length)]);
             }
-            return r;
+            return sb.ToString();
         }
 
         private Dictionary<string, string> Prepare(string raw)
@@ -275,7 +274,7 @@ namespace NeteaseCloudMusicAPI
         {
             BigInteger dec = new BigInteger(0);
             int len = hex.Length;
-            for (int i = 0; i < len; i++)
+            for (int i = 0; i < len; ++i)
             {
                 dec += BigInteger.Multiply(new BigInteger(Convert.ToInt32(hex[i].ToString(), 16)), BigInteger.Pow(new BigInteger(16), len - i - 1));
             }
@@ -341,6 +340,11 @@ namespace NeteaseCloudMusicAPI
             public string total = "true";
             public int offset;
             public string csrf_token = "";
+        }
+
+        public override string ToString()
+        {
+            return $"{GetType().FullName}{{secretKey:{_secretKey} encSecKey:{_encSecKey}}}";
         }
     }
 }
