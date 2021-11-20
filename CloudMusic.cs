@@ -11,7 +11,7 @@ namespace NeteaseCloudMusicAPI
     /// </summary>
     public partial class CloudMusic
     {
-        internal static readonly CloudMusicAPI api = new();
+        internal static readonly CloudMusicAPI api = new CloudMusicAPI();
         private Lyric _Lyric;
         private Image _Images;
         private Detail _Details;

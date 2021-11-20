@@ -1,4 +1,7 @@
-﻿namespace NeteaseCloudMusicAPI
+﻿using System;
+using System.Collections.Generic;
+
+namespace NeteaseCloudMusicAPI
 {
     public partial class CloudMusic
     {
@@ -29,7 +32,7 @@
                 public long Id { get; private set; }               
             }
 
-            public Author? AuthorInfo { get; }
+            public Author AuthorInfo { get; }
             /// <summary>
             /// LRC格式的歌词
             /// </summary>
