@@ -95,7 +95,8 @@ namespace NeteaseCloudMusicAPI
         public AlbumResult Album(long album_id)
         {
             string url = "http://music.163.com/weapi/v1/album/" + album_id.ToString() + "?csrf_token=";
-            var data = new Dictionary<string, string> {
+            var data = new Dictionary<string, string> 
+            {
                 { "csrf_token","" },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
@@ -158,7 +159,8 @@ namespace NeteaseCloudMusicAPI
         public PlayListResult Playlist(long playlist_id)
         {
             string url = "https://music.163.com/weapi/v3/playlist/detail?csrf_token=";
-            var data = new Dictionary<string, string> {
+            var data = new Dictionary<string, string> 
+            {
                 { "id",playlist_id.ToString() },
                 { "n" , "1000" },
                 { "csrf_token" , "" },
