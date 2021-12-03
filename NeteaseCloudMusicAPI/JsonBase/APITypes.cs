@@ -482,4 +482,7 @@ namespace NeteaseCloudMusicAPI
         public bool Toast { get; set; }
         public long Flag { get; set; }
     }
+
+    #region 评论
+    #endregion
 }

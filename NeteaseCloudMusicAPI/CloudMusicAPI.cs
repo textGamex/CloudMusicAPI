@@ -15,6 +15,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Net;
 using System.Numerics;
+using NeteaseCloudMusicAPI.JsonBase.CommentBase;
 
 namespace NeteaseCloudMusicAPI
 {
@@ -76,10 +77,10 @@ namespace NeteaseCloudMusicAPI
         /// <returns></returns>
         public ArtistResult Artist(long artist_id)
         {
-            var url = "http://music.163.com/weapi/v1/artist/" + artist_id.ToString() + "?csrf_token=";
+            var url = "https://music.163.com/weapi/v1/artist/" + artist_id.ToString() + "?csrf_token=";
             var data = new Dictionary<string, string>
             {
-                {"csrf_token",""}
+                {"csrf_token", ""}
             };
             var raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
 
@@ -94,10 +95,10 @@ namespace NeteaseCloudMusicAPI
         /// <returns></returns>
         public AlbumResult Album(long album_id)
         {
-            string url = "http://music.163.com/weapi/v1/album/" + album_id.ToString() + "?csrf_token=";
+            string url = "https://music.163.com/weapi/v1/album/" + album_id.ToString() + "?csrf_token=";
             var data = new Dictionary<string, string> 
             {
-                { "csrf_token","" },
+                { "csrf_token", "" },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
             var deserialedObj = JsonConvert.DeserializeObject<AlbumResult>(raw);
@@ -182,11 +183,11 @@ namespace NeteaseCloudMusicAPI
             var data = new Dictionary<string, string> 
             {
                 { "id", songId.ToString()},
-                { "os","pc" },
+                { "os", "pc" },
                 { "lv", "1" },
                 { "kv", "1" },
                 { "tv", "1" },
-                { "csrf_token","" }
+                { "csrf_token", "" }
             };
 
             var da = JsonConvert.SerializeObject(data);
@@ -199,20 +200,37 @@ namespace NeteaseCloudMusicAPI
         /// <summary>
         /// 歌曲评论
         /// </summary>
-        /// <param name="songId"></param>
+        /// <param name="songId">歌曲ID</param>
+        /// <param name="offset">偏移量, offset的取值为:(评论页数-1)*20</param>
+        /// <param name="limit">数量, 最大为100, 如果大于100, 则会变成20</param>
         /// <returns></returns>
-        public string Comment(long songId)
+        public CommentResult Comments(in long songId, in uint offset = 0, in uint limit = 20)
         {
-            const string url = "https://music.163.com/weapi/v1/resource/comments/R_SO_4_1892583113/?csrf_token=";
-            const string data1 = "https://music.163.com/api/v1/resource/comments/R_SO_4_1892583113?offset=1&limit=100";
+            //! 网易云音乐Web版现在正在使用的API
+            //string newApi = $"https://music.163.com/weapi/comment/resource/comments/get?csrf_token=";
+            //! GET的评论API
+            //string getApi = $"https://music.163.com/api/v1/resource/comments/R_SO_4_{songId}?offset=1&limit=100";
+
+            string url = $"https://music.163.com/weapi/v1/resource/comments/R_SO_4_{songId}/?csrf_token=";
             var data = new Dictionary<string, string>
             {
-                //{ "offset", 20.ToString() },
-                //{ "limit", 100.ToString() },
+                { "offset", offset.ToString() },
+                { "limit", limit.ToString() },
+                //{ "csrf_token", "" }
             };
-            var da = JsonConvert.SerializeObject(data);
-            _ = CURL(url, Prepare(da));
-            return "";
+            var json = JsonConvert.SerializeObject(data);
+            var resual = CURL(url, Prepare(json));
+            return JsonConvert.DeserializeObject<CommentResult>(resual);
+        }
+
+        /// <summary>
+        /// 歌曲的热门评论
+        /// </summary>
+        /// <param name="songId">歌曲ID</param>
+        /// <returns></returns>
+        public CommentResult HotComments(in long songId)
+        {
+            return Comments(songId, 0, 0);
         }
 
         public MVResult MV(int mv_id)
@@ -231,7 +249,7 @@ namespace NeteaseCloudMusicAPI
             return deserialedObj;
         }
 
-        private string Id2Url(int id)
+        private static string Id2Url(int id)
         {
             byte[] magic = Encoding.ASCII.GetBytes("3go8&8*3*3h0k(2)2");
             byte[] song_id = Encoding.ASCII.GetBytes(id.ToString());
@@ -253,7 +271,7 @@ namespace NeteaseCloudMusicAPI
         }
 
 
-        private string CreateSecretKey(int length)
+        private static string CreateSecretKey(int length)
         {
             const string str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             var sb = new StringBuilder(length);
@@ -348,6 +366,7 @@ namespace NeteaseCloudMusicAPI
                 byte[] responsebytes = wc.UploadValues(url, method, reqparm);
                 result = Encoding.UTF8.GetString(responsebytes);
             }
+            log.Debug($"原始数据={result}");
             log.Info(JObject.Parse(result));
             return result;
         }
