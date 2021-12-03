@@ -2,9 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Millennium</Authors>
+    <Authors>textGamex</Authors>
     <PackageLicenseExpression> Apache-2.0</PackageLicenseExpression>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Description>网易云音乐API</Description>
+    <PackageProjectUrl>https://github.com/textGamex/CloudMusicAPI</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/textGamex/CloudMusicAPI</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

@@ -196,9 +196,28 @@ namespace NeteaseCloudMusicAPI
             return deserialedObj;        
         }
 
+        /// <summary>
+        /// 歌曲评论
+        /// </summary>
+        /// <param name="songId"></param>
+        /// <returns></returns>
+        public string Comment(long songId)
+        {
+            const string url = "https://music.163.com/weapi/v1/resource/comments/R_SO_4_1892583113/?csrf_token=";
+            const string data1 = "https://music.163.com/api/v1/resource/comments/R_SO_4_1892583113?offset=1&limit=100";
+            var data = new Dictionary<string, string>
+            {
+                //{ "offset", 20.ToString() },
+                //{ "limit", 100.ToString() },
+            };
+            var da = JsonConvert.SerializeObject(data);
+            _ = CURL(url, Prepare(da));
+            return "";
+        }
+
         public MVResult MV(int mv_id)
         {
-            string url = "http://music.163.com/weapi/mv/detail?csrf_token=";
+            const string url = "http://music.163.com/weapi/mv/detail?csrf_token=";
             var data = new Dictionary<string, string> 
             {
                 { "id", mv_id.ToString() },
@@ -237,7 +256,7 @@ namespace NeteaseCloudMusicAPI
         private string CreateSecretKey(int length)
         {
             const string str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(length);
             var rnd = new Random();
             for (int i = 0; i < length; ++i)
             {
@@ -258,7 +277,7 @@ namespace NeteaseCloudMusicAPI
         }
 
         // encrypt mod
-        private string RSAEncode(string text)
+        private static string RSAEncode(string text)
         {
             string srtext = new string(text.Reverse().ToArray()); ;
             var a = BCHexDec(BitConverter.ToString(Encoding.Default.GetBytes(srtext)).Replace("-", ""));
@@ -272,7 +291,7 @@ namespace NeteaseCloudMusicAPI
                 return key;
         }
 
-        private BigInteger BCHexDec(string hex)
+        private static BigInteger BCHexDec(string hex)
         {
             BigInteger dec = new BigInteger(0);
             int len = hex.Length;
@@ -283,7 +302,7 @@ namespace NeteaseCloudMusicAPI
             return dec;
         }
 
-        private string AESEncode(string secretData, string secret = "TA3YiYCfY2dDJQgg")
+        private static string AESEncode(string secretData, string secret = "TA3YiYCfY2dDJQgg")
         {
             byte[] encrypted;
             byte[] IV = Encoding.UTF8.GetBytes(_VI);
