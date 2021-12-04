@@ -16,8 +16,9 @@ using System.IO;
 using System.Net;
 using System.Numerics;
 using NeteaseCloudMusicAPI.JsonBase.CommentBase;
+using System.Diagnostics;
 
-namespace NeteaseCloudMusicAPI
+namespace NeteaseCloudMusicAPI.Net
 {
     /// <summary>
     /// 网易云音乐API
@@ -31,7 +32,6 @@ namespace NeteaseCloudMusicAPI
         private const string _USERAGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36";
         private const string _COOKIE = "os=pc;osver=Microsoft-Windows-10-Professional-build-16299.125-64bit;appver=2.0.3.131777;channel=netease;__remember_me=true";
         private const string _REFERER = "https://music.163.com/";
-        private readonly NLog.Logger log = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly string _secretKey;
         private readonly string _encSecKey;
@@ -366,8 +366,8 @@ namespace NeteaseCloudMusicAPI
                 byte[] responsebytes = wc.UploadValues(url, method, reqparm);
                 result = Encoding.UTF8.GetString(responsebytes);
             }
-            log.Debug($"原始数据={result}");
-            log.Info(JObject.Parse(result));
+            Debug.WriteLine($"原始数据={result}");
+            Debug.WriteLine(JObject.Parse(result));
             return result;
         }
 
