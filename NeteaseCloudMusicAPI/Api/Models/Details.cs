@@ -39,6 +39,10 @@ namespace NeteaseCloudMusicAPI.Api
                 get { return SongCover; }
                 private set { SongCover = value; }
             }
+            /// <summary>
+            /// 热度
+            /// </summary>
+            public double Popularity { get; private set; }
 
             public Detail(long songId)
             {
@@ -52,6 +56,7 @@ namespace NeteaseCloudMusicAPI.Api
                 SongCover = songData.Al.PicUrl;
                 SongAlbumId = songData.Al.Id;
                 SongAlbumName = songData.Al.Name;
+                Popularity = songData.Pop;
             }
         }
     }

@@ -34,6 +34,11 @@ namespace NeteaseCloudMusicAPI.Api
         public CloudMusic(in long songId, CreateMode mode = CreateMode.Normal)
         {
             SongId = songId;
+            var errorCode = api.Detail(songId).Privileges[0].St;
+            if (errorCode != 0)
+            {
+                throw new ArgumentException($"歌曲Id错误:{songId}, 错误代码:{errorCode}");
+            }
             if (mode == CreateMode.Normal)
             {
                 _lyric = new Lyric(songId);

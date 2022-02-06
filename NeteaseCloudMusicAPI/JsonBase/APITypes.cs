@@ -413,7 +413,7 @@ namespace NeteaseCloudMusicAPI
         public long T { get; set; }
         public List<Ar> Ar { get; set; }
         public List<object> Alia { get; set; }
-        public long Pop { get; set; }
+        public double Pop { get; set; }
         public long St { get; set; }
         public string Rt { get; set; }
         public long Fee { get; set; }
