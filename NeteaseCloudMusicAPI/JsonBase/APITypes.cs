@@ -261,6 +261,13 @@ namespace NeteaseCloudMusicAPI
         public long Code { get; set; }
     }
 
+    public class DetailResultBatch
+    {
+        public List<Song> Songs { get; set; }
+        public List<Privilege> Privileges { get; set; }
+        public long Code { get; set; }
+    }
+
     public class Artist
     {
         public long Img1V1Id { get; set; }

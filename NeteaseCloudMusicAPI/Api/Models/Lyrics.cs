@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NeteaseCloudMusicAPI.Api;
+using NeteaseCloudMusicAPI.Net;
 
 namespace NeteaseCloudMusicAPI.Api
 {
@@ -53,21 +55,38 @@ namespace NeteaseCloudMusicAPI.Api
             /// </summary>
             public string Translation { get; private set; }
 
-            public Lyric(long musicId)
+            /// <summary>
+            /// 阻塞式
+            /// </summary>
+            /// <param name="musicId">音乐Id</param>
+            public Lyric(long musicId) : this(_api.Lyrics(musicId))
+            {}
+            
+            public static async Task<Lyric> GetLyricAsync(long songId)
             {
-                var data = api.Lyrics(musicId);
+                return new Lyric(await _api.LyricsAsync(songId));
+            }
+
+            private Lyric(LyricsResult data)
+            {
+                if (data == null)
+                {
+                    throw new ArgumentNullException(nameof(data));
+                }
                 Lyrics = data.Lrc == null ? "" : data.Lrc.Lyric;
                 LyricKrc = data.Klyric == null ? "" : data.Klyric.lyric;
                 Translation = data.Tlyric == null ? "" : data.Tlyric.Lyric;
                 if (data.LyricUser != null)
                 {
-                    ContributorInfo = new Contributor(data.LyricUser.Nickname, data.LyricUser.Uptime.ToString(), data.LyricUser.Id);                   
+                    ContributorInfo = new Contributor(data.LyricUser.Nickname,
+                        data.LyricUser.Uptime.ToString(), data.LyricUser.Id);                   
                 }
                 else
                 {
                     ContributorInfo = null;
                 }
             }
+
         }
 
         /// <summary>

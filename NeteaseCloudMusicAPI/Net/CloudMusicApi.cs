@@ -3,7 +3,6 @@
  * Copyright (c) 2018 GEEKiDoS
  * URL: https://github.com/GEEKiDoS/NeteaseMuiscApi
  */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +23,9 @@ namespace NeteaseCloudMusicAPI.Net
     /// <summary>
     /// 网易云音乐API
     /// </summary>
-    public class CloudMusicAPI
+    public partial class CloudMusicApi
     {
+        private const int MAX_DETAIL_REQUESTS_NUMBER = 1000;
         private const string _MODULUS = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
         private const string _NONCE = "0CoJUm6Qyw8W8jud";
         private const string _PUBKEY = "010001";
@@ -36,8 +36,8 @@ namespace NeteaseCloudMusicAPI.Net
 
         private readonly string _secretKey;
         private readonly string _encSecKey;
-
-        public CloudMusicAPI()
+        
+        public CloudMusicApi()
         {
             _secretKey = CreateSecretKey(16);
             _encSecKey = RSAEncode(_secretKey);
@@ -65,92 +65,100 @@ namespace NeteaseCloudMusicAPI.Net
             };
 
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
-
-            var DeserialedObj = JsonConvert.DeserializeObject<SearchResult>(raw);
-
-            return DeserialedObj;
+            return JsonConvert.DeserializeObject<SearchResult>(raw);
         }
 
         /// <summary>
         /// 歌手信息
         /// </summary>
-        /// <param name="artist_id"></param>
+        /// <param name="artistId"></param>
         /// <returns></returns>
-        public ArtistResult Artist(long artist_id)
+        public ArtistResult Artist(in long artistId)
         {
-            var url = "https://music.163.com/weapi/v1/artist/" + artist_id.ToString() + "?csrf_token=";
+            var url = "https://music.163.com/weapi/v1/artist/" + artistId.ToString() + "?csrf_token=";
             var data = new Dictionary<string, string>
             {
                 {"csrf_token", ""}
             };
             var raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
-
-            var deserialedObj = JsonConvert.DeserializeObject<ArtistResult>(raw);
-            return deserialedObj;
+            
+            return JsonConvert.DeserializeObject<ArtistResult>(raw);
         }
 
         /// <summary>
         /// 专辑信息
         /// </summary>
-        /// <param name="album_id"></param>
+        /// <param name="albumId"></param>
         /// <returns></returns>
-        public AlbumResult Album(long album_id)
+        public AlbumResult Album(in long albumId)
         {
-            string url = "https://music.163.com/weapi/v1/album/" + album_id.ToString() + "?csrf_token=";
+            string url = "https://music.163.com/weapi/v1/album/" + albumId.ToString() + "?csrf_token=";
             var data = new Dictionary<string, string> 
             {
                 { "csrf_token", "" },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
-            var deserialedObj = JsonConvert.DeserializeObject<AlbumResult>(raw);
-            return deserialedObj;
+            return JsonConvert.DeserializeObject<AlbumResult>(raw);
         }
 
         /// <summary>
         /// 音乐信息
         /// </summary>
-        /// <param name="song_id">音乐ID</param>
+        /// <param name="songId">音乐ID</param>
         /// <returns></returns>
-        public DetailResult Detail(long song_id)
+        public DetailResult Detail(in long songId)
         {
-            string url = "https://music.163.com/weapi/v3/song/detail?csrf_token=";
-            var data = new Dictionary<string, string> 
-            {
-                { "c",
-                    "[" + JsonConvert.SerializeObject(new Dictionary<string, string> 
-                    { //神tm 加密的json里套json mdzz (说不定一次可以查多首歌?)
-                        { "id", song_id.ToString() }
-                    }) + "]"
-                },
-                {"csrf_token",""}
-            };
-            string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
-            Console.WriteLine($"服务器返回={raw}");
-            var deserialedObj = JsonConvert.DeserializeObject<DetailResult>(raw);
-            return deserialedObj;
+            string raw = CURL(ApiUrl.DETAIL_URL, GetDetailParams(songId));
+            return JsonConvert.DeserializeObject<DetailResult>(raw);
         }
 
         /// <summary>
-        /// 异步的获得音乐信息
+        /// 批量得到音乐信息
         /// </summary>
         /// <param name="songId"></param>
         /// <returns></returns>
-        public async Task<DetailResult> DetailAsync(long songId)
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public DetailResultBatch DetailBatch(params long[] songId)
         {
-            string url = "https://music.163.com/weapi/v3/song/detail?csrf_token=";
+            if (songId.Length > MAX_DETAIL_REQUESTS_NUMBER)
+            {
+                throw new ArgumentOutOfRangeException($"超过最大请求数,最大请求数={MAX_DETAIL_REQUESTS_NUMBER}");
+            }
+            string raw = CURL(ApiUrl.DETAIL_URL, GetDetailBatchParams(songId));
+            return JsonConvert.DeserializeObject<DetailResultBatch>(raw);
+        }
+        
+        protected Dictionary<string, string> GetDetailBatchParams(params long[] songId)
+        {
+            //TODO:效率很低,有空优化一下
+            var list = new List<Dictionary<string, long>>(songId.Length);
+            foreach (var i in songId)
+            {
+                list.Add(new Dictionary<string, long>{{ "id", i }});
+            }
+            var data = new Dictionary<string, string> 
+            {
+                { "c", JsonConvert.SerializeObject(list) },
+                {"csrf_token", ""}
+            };
+            var json = JsonConvert.SerializeObject(data);
+            return Prepare(json);
+        }
+        
+        protected Dictionary<string, string> GetDetailParams(long songId)
+        {
             var data = new Dictionary<string, string> 
             {
                 { "c",
-                    "[" + JsonConvert.SerializeObject(new Dictionary<string, string> 
+                    "[" + JsonConvert.SerializeObject(new Dictionary<string, long> 
                     { //神tm 加密的json里套json mdzz (说不定一次可以查多首歌?)
-                        { "id", songId.ToString() }
+                        { "id", songId }
                     }) + "]"
                 },
-                {"csrf_token",""}
+                {"csrf_token", ""}
             };
             var json = JsonConvert.SerializeObject(data);
-            var raw = await PostAsync(url, Prepare(json));
-            return JsonConvert.DeserializeObject<DetailResult>(raw);
+            return Prepare(json);
         }
 
         private class GetSongUrlJson
@@ -160,40 +168,37 @@ namespace NeteaseCloudMusicAPI.Net
             public string csrf_token = "";
         }
 
-        public SongUrls GetSongsUrl(long[] song_id, long bitrate = 999000)
+        public SongUrls GetSongsUrl(long[] songId, long bitrate = 999000)
         {
             string url = "https://music.163.com/weapi/song/enhance/player/url?csrf_token=";
 
             var data = new GetSongUrlJson
             {
-                ids = song_id,
+                ids = songId,
                 br = bitrate
             };
 
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
-
-            var deserialedObj = JsonConvert.DeserializeObject<SongUrls>(raw);
-            return deserialedObj;
+            
+            return JsonConvert.DeserializeObject<SongUrls>(raw);
         }
 
         /// <summary>
         /// 播放列表
         /// </summary>
-        /// <param name="playlist_id"></param>
+        /// <param name="playlistId"></param>
         /// <returns></returns>
-        public PlayListResult Playlist(long playlist_id)
+        public PlayListResult Playlist(in long playlistId)
         {
             string url = "https://music.163.com/weapi/v3/playlist/detail?csrf_token=";
             var data = new Dictionary<string, string> 
             {
-                { "id",playlist_id.ToString() },
+                { "id",playlistId.ToString() },
                 { "n" , "1000" },
                 { "csrf_token" , "" },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
-
-            var deserialedObj = JsonConvert.DeserializeObject<PlayListResult>(raw);
-            return deserialedObj;
+            return JsonConvert.DeserializeObject<PlayListResult>(raw);
         }
 
         /// <summary>
@@ -201,28 +206,13 @@ namespace NeteaseCloudMusicAPI.Net
         /// </summary>
         /// <param name="songId">音乐ID</param>
         /// <returns></returns>
-        public LyricsResult Lyrics(long songId)
+        public LyricsResult Lyrics(in long songId)
         {
-            string url = "https://music.163.com/weapi/song/lyric?csrf_token=";
-
-            string raw = CURL(url, GetLyricsParms(songId));
-            var deserialedObj = JsonConvert.DeserializeObject<LyricsResult>(raw);
-            return deserialedObj;        
+            string raw = CURL(ApiUrl.LYRICS_URL, GetLyricsParams(songId));
+            return JsonConvert.DeserializeObject<LyricsResult>(raw);
         }
-
-        /// <summary>
-        /// 异步的获得音乐歌词
-        /// </summary>
-        /// <param name="songId">音乐ID</param>
-        /// <returns></returns>
-        public async Task<LyricsResult> LyricsAsync(long songId)
-        {
-            string url = "https://music.163.com/weapi/song/lyric?csrf_token=";
-            string raw = await PostAsync(url, GetLyricsParms(songId));
-            return JsonConvert.DeserializeObject<LyricsResult>(raw);        
-        }
-
-        private Dictionary<string, string> GetLyricsParms(long songId)
+        
+        protected Dictionary<string, string> GetLyricsParams(in long songId)
         {
             var data = new Dictionary<string, string> 
             {
@@ -323,7 +313,7 @@ namespace NeteaseCloudMusicAPI.Net
         }
 
         private Dictionary<string, string> Prepare(string raw)
-        { 
+        {
             Dictionary<string, string> data = new Dictionary<string, string>
             {
                 ["params"] = AESEncode(raw, _NONCE)
@@ -388,7 +378,7 @@ namespace NeteaseCloudMusicAPI.Net
         }
 
         // fake curl
-        private static string CURL(string url, Dictionary<string, string> parms, string method = "POST")
+        private static string CURL(string url, Dictionary<string, string> paramsValue, string method = "POST")
         {
             string result;
             using (var wc = new WebClient())
@@ -398,29 +388,19 @@ namespace NeteaseCloudMusicAPI.Net
                 wc.Headers.Add(HttpRequestHeader.UserAgent, _USERAGENT);
                 wc.Headers.Add(HttpRequestHeader.Cookie, _COOKIE);
                 var reqparm = new System.Collections.Specialized.NameValueCollection();
-                foreach (var keyPair in parms)
+                foreach (var keyPair in paramsValue)
                 {
                     reqparm.Add(keyPair.Key, keyPair.Value);
                 }
                 byte[] responseBytes = wc.UploadValues(url, method, reqparm);
                 result = Encoding.UTF8.GetString(responseBytes);
             }
-            Debug.WriteLine($"原始数据={result}");
-            Debug.WriteLine(JObject.Parse(result));
+#if DEBUG
+            Console.WriteLine($"原始数据={result}");
+            Console.WriteLine("-------------------------------------");
+            Console.WriteLine(JObject.Parse(result));
+#endif
             return result;
-        }
-
-        private static async Task<string> PostAsync(string url, Dictionary<string, string> parms)
-        {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Cookie", _COOKIE);
-                client.DefaultRequestHeaders.Add("User-Agent", _USERAGENT);
-                client.DefaultRequestHeaders.Add("Referer", _REFERER);
-                var reqparm = new FormUrlEncodedContent(parms);
-                var data = await client.PostAsync(url, reqparm);
-                return await data.Content.ReadAsStringAsync();
-            }
         }
 
         // api start

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using NeteaseCloudMusicAPI.Net;
+using System.Collections.Specialized;
 
 namespace NeteaseCloudMusicAPI.Api
 {
@@ -14,7 +17,7 @@ namespace NeteaseCloudMusicAPI.Api
             /// <summary>
             /// 作者信息, <c>key</c>为作者名称, <c>value</c>为作者ID
             /// </summary>
-            public Dictionary<string, long> AuthorInfos { get; private set; } = new Dictionary<string, long>();
+            public NameValueCollection AuthorInfos { get; private set; } = new NameValueCollection();
             /// <summary>
             /// 歌曲名
             /// </summary>
@@ -44,13 +47,25 @@ namespace NeteaseCloudMusicAPI.Api
             /// </summary>
             public double Popularity { get; private set; }
 
-            public Detail(long songId)
+            public Detail(long songId) : this(_api.Detail(songId))
+            { }
+
+            public static async Task<Detail> GetDetailAsync(long songId)
             {
-                var data = api.Detail(songId);
+                return new Detail(await _api.DetailAsync(songId));
+            }
+
+            private Detail(DetailResult data)
+            {
+                if (data.Songs.Length == 0)
+                {
+                    IsNonExistent = true;
+                    return;
+                }
                 var songData = data.Songs[0];
                 foreach (var item in songData.Ar)
                 {
-                    AuthorInfos.Add(item.Name, item.Id);
+                    AuthorInfos.Add(item.Name, item.Id.ToString());
                 }
                 SongName = songData.Name;
                 SongCover = songData.Al.PicUrl;
@@ -58,6 +73,11 @@ namespace NeteaseCloudMusicAPI.Api
                 SongAlbumName = songData.Al.Name;
                 Popularity = songData.Pop;
             }
+
+            /// <summary>
+            /// 如果歌曲不存在,返回true
+            /// </summary>
+            internal bool IsNonExistent { get; }
         }
     }
 }
