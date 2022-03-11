@@ -12,10 +12,11 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>1.0.1</Version>
+    <Version>2.0.0</Version>
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <PackageIcon>网易云.png</PackageIcon>
     <PackageId>NeteaseCloudMusic-API</PackageId>
+    <PackageTags>网易云音乐;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
