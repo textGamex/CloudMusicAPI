@@ -59,6 +59,11 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// </summary>
         public string Translation { get; private set; }
 
+        /// <summary>
+        /// 是未收录的
+        /// </summary>
+        public bool IsUncollected { get; private set; }
+
         public Lyrics(LyricsResult data)
         {
             if (data == null)
@@ -66,6 +71,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
                 throw new ArgumentNullException(nameof(data));
             }
 
+            IsUncollected = data.Uncollected;
             Lyric = data.Lrc?.Lyric ?? string.Empty;
             LyricKrc = data.Klyric?.lyric ?? string.Empty;
             Translation = data.Tlyric?.Lyric ?? string.Empty;
