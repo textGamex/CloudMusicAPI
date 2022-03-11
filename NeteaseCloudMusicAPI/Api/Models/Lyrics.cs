@@ -14,9 +14,9 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// <summary>
         /// 歌词贡献者的信息
         /// </summary>
-        public class Contributor
+        public class LyricsContributor
         {
-            public Contributor(string name, string timeStamp, long id)
+            public LyricsContributor(string name, string timeStamp, long id)
             {
                 Name = name;
                 UpTime = GetDateTime(timeStamp);
@@ -42,7 +42,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// <summary>
         /// 歌词贡献者的信息, 为<c>null</c>则代表没有
         /// </summary>
-        public Contributor ContributorInfo { get; }
+        public LyricsContributor LyricsContributorInfo { get; }
 
         /// <summary>
         /// LRC格式的歌词
@@ -66,17 +66,17 @@ namespace NeteaseCloudMusicAPI.Api.Models
                 throw new ArgumentNullException(nameof(data));
             }
 
-            Lyric = data.Lrc == null ? "" : data.Lrc.Lyric;
-            LyricKrc = data.Klyric == null ? "" : data.Klyric.lyric;
-            Translation = data.Tlyric == null ? "" : data.Tlyric.Lyric;
+            Lyric = data.Lrc.Lyric ?? string.Empty;
+            LyricKrc = data.Klyric.lyric ?? string.Empty;
+            Translation = data.Tlyric.Lyric ?? string.Empty;
             if (data.LyricUser != null)
             {
-                ContributorInfo = new Contributor(data.LyricUser.Nickname,
+                LyricsContributorInfo = new LyricsContributor(data.LyricUser.Nickname,
                     data.LyricUser.Uptime.ToString(), data.LyricUser.Id);
             }
             else
             {
-                ContributorInfo = null;
+                LyricsContributorInfo = null;
             }
         }
 

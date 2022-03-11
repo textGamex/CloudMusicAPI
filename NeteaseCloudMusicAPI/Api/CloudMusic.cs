@@ -47,7 +47,5 @@ namespace NeteaseCloudMusicAPI.Api
         //     var errorCode = await api.DetailAsync(songId);
         //     return (errorCode.Privileges[0].St == 0, songId);
         // }
-        
-
     }
 }

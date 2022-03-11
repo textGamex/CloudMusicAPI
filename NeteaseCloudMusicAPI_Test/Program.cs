@@ -14,7 +14,9 @@ namespace Test
         {
             // var da = new CloudMusicAPI().Detail(54827972511);
             // var daa = new CloudMusicAPI().Lyrics(54827972511);
-            // var d = new CloudMusic(54827972511);
+            var d = CloudMusic.GetLyrics(548279725);
+            Console.WriteLine(d.LyricKrc);
+            Console.WriteLine(d.LyricKrc == "");
             // Console.WriteLine(d.Details.IsNonExistent);
             // var a = CloudMusic.NewAsync(54827972511);
             // Console.WriteLine(123);

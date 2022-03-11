@@ -25,7 +25,7 @@ namespace NeteaseCloudMusicAPI.Net
     /// </summary>
     public partial class CloudMusicApi
     {
-        private const int MAX_DETAIL_REQUESTS_NUMBER = 1000;
+        public const int MAX_DETAIL_REQUESTS_NUMBER = 1000;
         private const string _MODULUS = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
         private const string _NONCE = "0CoJUm6Qyw8W8jud";
         private const string _PUBKEY = "010001";
@@ -88,7 +88,7 @@ namespace NeteaseCloudMusicAPI.Net
             var url = "https://music.163.com/weapi/v1/artist/" + artistId.ToString() + "?csrf_token=";
             var data = new Dictionary<string, string>
             {
-                {"csrf_token", ""}
+                {"csrf_token", string.Empty}
             };
             var raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
             
@@ -105,7 +105,7 @@ namespace NeteaseCloudMusicAPI.Net
             string url = "https://music.163.com/weapi/v1/album/" + albumId.ToString() + "?csrf_token=";
             var data = new Dictionary<string, string> 
             {
-                { "csrf_token", "" },
+                { "csrf_token", string.Empty },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
             return JsonConvert.DeserializeObject<AlbumResult>(raw);
@@ -121,6 +121,17 @@ namespace NeteaseCloudMusicAPI.Net
             string raw = CURL(ApiUrl.DETAIL_URL, GetDetailParams(songId));
             return JsonConvert.DeserializeObject<DetailResult>(raw);
         }
+        
+        /// <summary>
+        /// 异步的获得音乐信息
+        /// </summary>
+        /// <param name="songId">音乐ID</param>
+        /// <returns></returns>
+        public async Task<DetailResult> DetailAsync(long songId)
+        {
+            var raw = await PostAsync(ApiUrl.DETAIL_URL, GetDetailParams(songId));
+            return JsonConvert.DeserializeObject<DetailResult>(raw);
+        }
 
         /// <summary>
         /// 批量得到音乐信息
@@ -132,7 +143,7 @@ namespace NeteaseCloudMusicAPI.Net
         {
             if (songId.Length > MAX_DETAIL_REQUESTS_NUMBER)
             {
-                throw new ArgumentOutOfRangeException($"超过最大请求数,最大请求数={MAX_DETAIL_REQUESTS_NUMBER}");
+                throw new ArgumentOutOfRangeException($"超过最大请求数, 最大请求数={MAX_DETAIL_REQUESTS_NUMBER}");
             }
             string raw = CURL(ApiUrl.DETAIL_URL, GetDetailBatchParams(songId));
             return JsonConvert.DeserializeObject<DetailResultBatch>(raw);
@@ -149,7 +160,7 @@ namespace NeteaseCloudMusicAPI.Net
             var data = new Dictionary<string, string> 
             {
                 { "c", JsonConvert.SerializeObject(list) },
-                {"csrf_token", ""}
+                {"csrf_token", string.Empty}
             };
             var json = JsonConvert.SerializeObject(data);
             return Prepare(json);
@@ -165,7 +176,7 @@ namespace NeteaseCloudMusicAPI.Net
                         { "id", songId }
                     }) + "]"
                 },
-                {"csrf_token", ""}
+                {"csrf_token", string.Empty}
             };
             var json = JsonConvert.SerializeObject(data);
             return Prepare(json);
@@ -175,7 +186,7 @@ namespace NeteaseCloudMusicAPI.Net
         {
             public long[] ids;
             public long br;
-            public string csrf_token = "";
+            public string csrf_token = string.Empty;
         }
 
         public SongUrls GetSongsUrl(long[] songId, long bitrate = 999000)
@@ -205,7 +216,7 @@ namespace NeteaseCloudMusicAPI.Net
             {
                 { "id", playlistId.ToString() },
                 { "n" , "1000" },
-                { "csrf_token" , "" },
+                { "csrf_token" , string.Empty },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
             return JsonConvert.DeserializeObject<PlayListResult>(raw);
@@ -231,7 +242,7 @@ namespace NeteaseCloudMusicAPI.Net
                 { "lv", "1" },
                 { "kv", "1" },
                 { "tv", "1" },
-                { "csrf_token", "" }
+                { "csrf_token", string.Empty }
             };
             var da = JsonConvert.SerializeObject(data);
             return Prepare(da);
@@ -256,7 +267,7 @@ namespace NeteaseCloudMusicAPI.Net
             {
                 { "offset", offset.ToString() },
                 { "limit", limit.ToString() },
-                { "csrf_token", "" }
+                { "csrf_token", string.Empty }
             };
             var json = JsonConvert.SerializeObject(data);
             var resual = CURL(url, Prepare(json));
@@ -279,7 +290,7 @@ namespace NeteaseCloudMusicAPI.Net
             var data = new Dictionary<string, string> 
             {
                 { "id", mvId.ToString() },
-                { "csrf_token", "" },
+                { "csrf_token", string.Empty },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
             var deserialedObj = JsonConvert.DeserializeObject<MVResult>(
@@ -289,16 +300,7 @@ namespace NeteaseCloudMusicAPI.Net
             return deserialedObj;
         }
         
-        /// <summary>
-        /// 异步的获得音乐信息
-        /// </summary>
-        /// <param name="songId">音乐ID</param>
-        /// <returns></returns>
-        public async Task<DetailResult> DetailAsync(long songId)
-        {
-            var raw = await PostAsync(ApiUrl.DETAIL_URL, GetDetailParams(songId));
-            return JsonConvert.DeserializeObject<DetailResult>(raw);
-        }
+
 
         /// <summary>
         /// 
@@ -358,7 +360,7 @@ namespace NeteaseCloudMusicAPI.Net
         private static string RSAEncode(string text)
         {
             string srtext = new string(text.Reverse().ToArray());
-            var a = BCHexDec(BitConverter.ToString(Encoding.Default.GetBytes(srtext)).Replace("-", ""));
+            var a = BCHexDec(BitConverter.ToString(Encoding.Default.GetBytes(srtext)).Replace("-", string.Empty));
             var b = BCHexDec(_PUBKEY);
             var c = BCHexDec(_MODULUS);
             var key = BigInteger.ModPow(a, b, c).ToString("x");
@@ -442,7 +444,7 @@ namespace NeteaseCloudMusicAPI.Net
             public int limit;
             public string total = "true";
             public int offset;
-            public string csrf_token = "";
+            public string csrf_token = string.Empty;
         }
 
         public override string ToString()
