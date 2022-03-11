@@ -59,16 +59,16 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// </summary>
         public string Translation { get; private set; }
 
-        internal Lyrics(LyricsResult data)
+        public Lyrics(LyricsResult data)
         {
             if (data == null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
 
-            Lyric = data.Lrc.Lyric ?? string.Empty;
-            LyricKrc = data.Klyric.lyric ?? string.Empty;
-            Translation = data.Tlyric.Lyric ?? string.Empty;
+            Lyric = data.Lrc?.Lyric ?? string.Empty;
+            LyricKrc = data.Klyric?.lyric ?? string.Empty;
+            Translation = data.Tlyric?.Lyric ?? string.Empty;
             if (data.LyricUser != null)
             {
                 LyricsContributorInfo = new LyricsContributor(data.LyricUser.Nickname,

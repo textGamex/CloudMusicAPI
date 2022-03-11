@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeteaseCloudMusicAPI", "Net
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeteaseCloudMusicAPI_Test", "NeteaseCloudMusicAPI_Test\NeteaseCloudMusicAPI_Test.csproj", "{624062AF-65A4-49AD-8CB8-37C6C1A2B64D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudMusicAPI_Test", "CloudMusicAPI_Test\CloudMusicAPI_Test.csproj", "{4748482C-6806-4117-99F5-0FE44C26DCD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{624062AF-65A4-49AD-8CB8-37C6C1A2B64D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{624062AF-65A4-49AD-8CB8-37C6C1A2B64D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{624062AF-65A4-49AD-8CB8-37C6C1A2B64D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4748482C-6806-4117-99F5-0FE44C26DCD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4748482C-6806-4117-99F5-0FE44C26DCD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4748482C-6806-4117-99F5-0FE44C26DCD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4748482C-6806-4117-99F5-0FE44C26DCD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
