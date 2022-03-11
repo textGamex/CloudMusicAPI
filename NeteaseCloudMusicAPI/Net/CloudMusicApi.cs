@@ -36,6 +36,16 @@ namespace NeteaseCloudMusicAPI.Net
 
         private readonly string _secretKey;
         private readonly string _encSecKey;
+        private static readonly HttpClient _client = GetHttpClient();
+        
+        private static HttpClient GetHttpClient()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Cookie", _COOKIE);
+            client.DefaultRequestHeaders.Add("User-Agent", _USERAGENT);
+            client.DefaultRequestHeaders.Add("Referer", _REFERER);
+            return client;
+        }
         
         public CloudMusicApi()
         {
@@ -52,7 +62,7 @@ namespace NeteaseCloudMusicAPI.Net
             User = 1002,
             Radio = 1009,
         }
-
+        
         public SearchResult Search(string keyword, int limit = 30, int offset = 0, SearchType type = SearchType.Song)
         {
             var url = "https://music.163.com/weapi/cloudsearch/get/web";
@@ -128,7 +138,7 @@ namespace NeteaseCloudMusicAPI.Net
             return JsonConvert.DeserializeObject<DetailResultBatch>(raw);
         }
         
-        protected Dictionary<string, string> GetDetailBatchParams(params long[] songId)
+        private Dictionary<string, string> GetDetailBatchParams(params long[] songId)
         {
             //TODO:效率很低,有空优化一下
             var list = new List<Dictionary<string, long>>(songId.Length);
@@ -145,7 +155,7 @@ namespace NeteaseCloudMusicAPI.Net
             return Prepare(json);
         }
         
-        protected Dictionary<string, string> GetDetailParams(long songId)
+        private Dictionary<string, string> GetDetailParams(long songId)
         {
             var data = new Dictionary<string, string> 
             {
@@ -193,7 +203,7 @@ namespace NeteaseCloudMusicAPI.Net
             string url = "https://music.163.com/weapi/v3/playlist/detail?csrf_token=";
             var data = new Dictionary<string, string> 
             {
-                { "id",playlistId.ToString() },
+                { "id", playlistId.ToString() },
                 { "n" , "1000" },
                 { "csrf_token" , "" },
             };
@@ -263,12 +273,12 @@ namespace NeteaseCloudMusicAPI.Net
             return Comments(songId, 0, 0);
         }
 
-        public MVResult MV(int mv_id)
+        public MVResult MV(int mvId)
         {
             const string url = "https://music.163.com/weapi/mv/detail?csrf_token=";
             var data = new Dictionary<string, string> 
             {
-                { "id", mv_id.ToString() },
+                { "id", mvId.ToString() },
                 { "csrf_token", "" },
             };
             string raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
@@ -278,26 +288,47 @@ namespace NeteaseCloudMusicAPI.Net
                    .Replace("\"240\"", "\"the240\"")); //不能解析数字key的解决方案
             return deserialedObj;
         }
+        
+        /// <summary>
+        /// 异步的获得音乐信息
+        /// </summary>
+        /// <param name="songId">音乐ID</param>
+        /// <returns></returns>
+        public async Task<DetailResult> DetailAsync(long songId)
+        {
+            var raw = await PostAsync(ApiUrl.DETAIL_URL, GetDetailParams(songId));
+            return JsonConvert.DeserializeObject<DetailResult>(raw);
+        }
 
-        private static string Id2Url(int id)
-        { 
-            byte[] magic = Encoding.ASCII.GetBytes("3go8&8*3*3h0k(2)2");
-            byte[] song_id = Encoding.ASCII.GetBytes(id.ToString());
-
-            for (int i = 0; i < song_id.Length; i++)
-                song_id[i] = Convert.ToByte(song_id[i] ^ magic[i % magic.Length]);
-
-            string result;
-
-            using (var md5 = MD5.Create())
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="songId"></param>
+        /// <returns></returns>
+        public async Task<DetailResultBatch> DetailBatchAsync(params long[] songId)
+        {
+            var raw = await PostAsync(ApiUrl.DETAIL_URL, GetDetailBatchParams(songId));
+            return JsonConvert.DeserializeObject<DetailResultBatch>(raw);
+        }
+        
+        /// <summary>
+        /// 异步的获得音乐歌词
+        /// </summary>
+        /// <param name="songId">音乐ID</param>
+        /// <returns></returns>
+        public async Task<LyricsResult> LyricsAsync(long songId)
+        {
+            string raw = await PostAsync(ApiUrl.LYRICS_URL, GetLyricsParams(songId));
+            return JsonConvert.DeserializeObject<LyricsResult>(raw);        
+        }
+        
+        private static async Task<string> PostAsync(string url, Dictionary<string, string> paramsValue)
+        {
+            var reqparm = new FormUrlEncodedContent(paramsValue);
+            using (var data = await _client.PostAsync(url, reqparm))
             {
-                md5.ComputeHash(song_id);
-                result = Convert.ToBase64String(md5.Hash);
+                return await data.Content.ReadAsStringAsync();
             }
-
-            result = result.Replace("/", "_");
-            result = result.Replace("+", "-");
-            return result;
         }
         
         private static string CreateSecretKey(int length)
