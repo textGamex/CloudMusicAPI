@@ -4,9 +4,28 @@
 
 本项目使用 .NET Standard2.0 框架(.NET Framework 4.6.1+ / .NET Core 3.0+ / .NET 5 / .NET 6), 可跨平台
 
+## 示例
+
+```c#
+using NeteaseCloudMusicAPI.Api;
+using NeteaseCloudMusicAPI.Api.Models;
+
+namespace Test;
+
+public class Test
+{
+    public static void Main()
+    {
+        const long musicId = 447309968;
+        Lyrics lyricsData = CloudMusic.GetLyrics(musicId);
+        Console.WriteLine(lyricsData.Lyric);
+    }
+}
+```
+
 ## 使用此库开发的项目
 
-### [LyricsTools](https://github.com/textGamex/LyricsTools)
+- [LyricsTools](https://github.com/textGamex/LyricsTools)
 
 ## 已实现功能
 

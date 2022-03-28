@@ -62,7 +62,7 @@ namespace NeteaseCloudMusicAPI
     }
 
     public sealed class LyricsResult
-    {        
+    {
         public bool Sgc { get; set; }
         public bool Sfy { get; set; }
         public bool Qfy { get; set; }

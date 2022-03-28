@@ -51,7 +51,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// </summary>
         public double Popularity { get; private set; }
 
-        internal Detail(DetailResult data)
+        public Detail(DetailResult data)
         {
             if (data.Songs.Length == 0)
             {

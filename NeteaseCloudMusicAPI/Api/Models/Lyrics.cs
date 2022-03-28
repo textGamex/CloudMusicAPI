@@ -90,7 +90,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// 时间戳转为C#格式时间
         /// </summary>
         /// <param name="timeStamp">时间戳</param>
-        /// <returns></returns>
+        /// <returns>C#格式时间</returns>
         private static DateTime GetDateTime(string timeStamp)
         {
             if (timeStamp.Length > 10)
