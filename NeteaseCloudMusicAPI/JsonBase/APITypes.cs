@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NeteaseCloudMusicAPI
 {
-    public class MVResult
+    public sealed class MVResult
     {
         public string LoadingPic { get; set; }
         public string BufferPic { get; set; }
@@ -24,7 +24,7 @@ namespace NeteaseCloudMusicAPI
         public long Code { get; set; }
     }
 
-    public class Data
+    public sealed class Data
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -48,20 +48,20 @@ namespace NeteaseCloudMusicAPI
         public string CommentThreadId { get; set; }
     }
 
-    public class MVArtist
+    public sealed class MVArtist
     {
         public long Id { get; set; }
         public string Name { get; set; }
     }
 
-    public class Brs
+    public sealed class Brs
     {
         public string The480 { get; set; }
         public string The240 { get; set; }
         public string The720 { get; set; }
     }
 
-    public class LyricsResult
+    public sealed class LyricsResult
     {        
         public bool Sgc { get; set; }
         public bool Sfy { get; set; }
@@ -76,19 +76,19 @@ namespace NeteaseCloudMusicAPI
         public long Code { get; set; }
     }
 
-    public class Klyric
+    public sealed class Klyric
     {
         public long Version { get; set; }
         public string lyric { get; set; }
     }
 
-    public class Lrc
+    public sealed class Lrc
     {
         public long Version { get; set; }
         public string Lyric { get; set; }
     }
 
-    public class LyricUser
+    public sealed class LyricUser
     {
         public long Id { get; set; }
         public long Status { get; set; }
@@ -99,20 +99,20 @@ namespace NeteaseCloudMusicAPI
     }
 
 
-    public class SongUrls
+    public sealed class SongUrls
     {
         public Datum[] Data { get; set; }
         public long Code { get; set; }
     }
 
-    public class PlayListResult
+    public sealed class PlayListResult
     {
         public Playlist Playlist { get; set; }
         public long Code { get; set; }
         public Privilege[] Privileges { get; set; }
     }
 
-    public class Playlist
+    public sealed class Playlist
     {
         public object[] Subscribers { get; set; }
         public bool Subscribed { get; set; }
@@ -147,7 +147,7 @@ namespace NeteaseCloudMusicAPI
         public long CommentCount { get; set; }
     }
 
-    public class User
+    public sealed class User
     {
         public bool DefaultAvatar { get; set; }
         public long Province { get; set; }
@@ -178,7 +178,7 @@ namespace NeteaseCloudMusicAPI
         public string AvatarImgIdStr { get; set; }
     }
 
-    public class Track
+    public sealed class Track
     {
         public string Name { get; set; }
         public long Id { get; set; }
@@ -216,13 +216,13 @@ namespace NeteaseCloudMusicAPI
         public string[] Tns { get; set; }
     }
 
-    public class TrackId
+    public sealed class TrackId
     {
         public long Id { get; set; }
         public long V { get; set; }
     }
 
-    public class Datum
+    public sealed class Datum
     {
         public long Id { get; set; }
         public string Url { get; set; }
@@ -240,13 +240,13 @@ namespace NeteaseCloudMusicAPI
         public bool CanExtend { get; set; }
     }
 
-    public class SearchResult
+    public sealed class SearchResult
     {
         public SResult Result { get; set; }
         public long Code { get; set; }
     }
 
-    public class ArtistResult
+    public sealed class ArtistResult
     {
         public long Code { get; set; }
         public Artist Artist { get; set; }
@@ -254,21 +254,21 @@ namespace NeteaseCloudMusicAPI
         public List<HotSong> HotSongs { get; set; }
     }
 
-    public class DetailResult
+    public sealed class DetailResult
     {
         public Song[] Songs { get; set; }
         public Privilege[] Privileges { get; set; }
         public long Code { get; set; }
     }
 
-    public class DetailResultBatch
+    public sealed class DetailResultBatch
     {
         public List<Song> Songs { get; set; }
         public List<Privilege> Privileges { get; set; }
         public long Code { get; set; }
     }
 
-    public class Artist
+    public sealed class Artist
     {
         public long Img1V1Id { get; set; }
         public long TopicPerson { get; set; }
@@ -287,14 +287,14 @@ namespace NeteaseCloudMusicAPI
         public bool Followed { get; set; }
     }
 
-    public class AlbumResult
+    public sealed class AlbumResult
     {
         public Song[] Songs { get; set; }
         public long Code { get; set; }
         public Album Album { get; set; }
     }
 
-    public class Album
+    public sealed class Album
     {
         public object[] Songs { get; set; }
         public bool Paid { get; set; }
@@ -324,7 +324,7 @@ namespace NeteaseCloudMusicAPI
         public Info Info { get; set; }
     }
 
-    public class Info
+    public sealed class Info
     {
         public CommentThread CommentThread { get; set; }
         public object LatestLikedUsers { get; set; }
@@ -338,7 +338,7 @@ namespace NeteaseCloudMusicAPI
         public string ThreadId { get; set; }
     }
 
-    public class CommentThread
+    public sealed class CommentThread
     {
         public string Id { get; set; }
         public ResourceInfo ResourceInfo { get; set; }
@@ -353,7 +353,7 @@ namespace NeteaseCloudMusicAPI
         public string ResourceTitle { get; set; }
     }
 
-    public class ResourceInfo
+    public sealed class ResourceInfo
     {
         public long Id { get; set; }
         public long UserId { get; set; }
@@ -363,7 +363,7 @@ namespace NeteaseCloudMusicAPI
     }
 
 
-    public class HotSong
+    public sealed class HotSong
     {
         public List<object> RtUrls { get; set; }
         public List<Ar> Ar { get; set; }
@@ -398,7 +398,7 @@ namespace NeteaseCloudMusicAPI
         public Privilege Privilege { get; set; }
     }
 
-    public class SResult
+    public sealed class SResult
     {
         public List<Song> Songs { get; set; }
         public long SongCount { get; set; }
@@ -412,7 +412,7 @@ namespace NeteaseCloudMusicAPI
         public long UserprofileCount { get; set; }
     }
 
-    public class Song
+    public sealed class Song
     {
         public string Name { get; set; }
         public long Id { get; set; }
@@ -447,7 +447,7 @@ namespace NeteaseCloudMusicAPI
         public Privilege Privilege { get; set; }
     }
 
-    public class Al
+    public sealed class Al
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -456,7 +456,7 @@ namespace NeteaseCloudMusicAPI
         public long Pic { get; set; }
     }
 
-    public class Ar
+    public sealed class Ar
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -464,7 +464,7 @@ namespace NeteaseCloudMusicAPI
         public List<object> Alias { get; set; }
     }
 
-    public class H
+    public sealed class H
     {
         public long Br { get; set; }
         public long Fid { get; set; }
@@ -472,7 +472,7 @@ namespace NeteaseCloudMusicAPI
         public double Vd { get; set; }
     }
 
-    public class Privilege
+    public sealed class Privilege
     {
         public long Id { get; set; }
         public long Fee { get; set; }
