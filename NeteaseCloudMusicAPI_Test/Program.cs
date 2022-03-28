@@ -1,20 +1,16 @@
-﻿using System.Collections.Specialized;
-using System.Text;
-using NeteaseCloudMusicAPI;
-using NeteaseCloudMusicAPI.Api;
-using NeteaseCloudMusicAPI.Net;
-using Newtonsoft.Json;
+﻿using NeteaseCloudMusicAPI.Net;
 
 namespace Test
 {
     public static class Program
     {
         private static CloudMusicApi _api = new CloudMusicApi();
-        public static async Task Main()
+        public static void Main()
         {
+            
             // var da = new CloudMusicAPI().Detail(54827972511);
             var daa = new CloudMusicApi().Lyrics(548279725);
-            Console.WriteLine(daa.Uncollected);
+            // Console.WriteLine(daa.Uncollected);
             // var d = CloudMusic.GetLyrics(123);
             // Console.WriteLine(d.LyricKrc);
             // Console.WriteLine(d.LyricKrc == "");
