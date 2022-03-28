@@ -8,6 +8,7 @@ namespace Test
         public static void Main()
         {
             
+            
             // var da = new CloudMusicAPI().Detail(54827972511);
             var daa = new CloudMusicApi().Lyrics(548279725);
             // Console.WriteLine(daa.Uncollected);
