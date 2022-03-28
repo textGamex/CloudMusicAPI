@@ -10,7 +10,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
     /// <summary>
     /// 歌曲详情
     /// </summary>
-    public class Detail
+    public class Details
     {
         /// <summary>
         /// 作者信息, <c>key</c>为作者名称, <c>value</c>为作者ID
@@ -51,30 +51,31 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// </summary>
         public double Popularity { get; private set; }
 
-        public Detail(DetailResult data)
+        public Details(Song song)
         {
-            if (data.Songs.Length == 0)
-            {
-                IsNonExistent = true;
-                return;
-            }
-
-            var songData = data.Songs[0];
-            foreach (var item in songData.Ar)
+            foreach (var item in song.Ar)
             {
                 AuthorInfos.Add(item.Name, item.Id.ToString());
             }
 
-            SongName = songData.Name;
-            SongCover = songData.Al.PicUrl;
-            SongAlbumId = songData.Al.Id;
-            SongAlbumName = songData.Al.Name;
-            Popularity = songData.Pop;
+            SongName = song.Name;
+            SongCover = song.Al.PicUrl;
+            SongAlbumId = song.Al.Id;
+            SongAlbumName = song.Al.Name;
+            Popularity = song.Pop;
         }
+
+        public Details(RawDetailsResult data) : this(data.Songs[0]) {}
 
         /// <summary>
         /// 如果歌曲不存在,返回true
         /// </summary>
-        internal bool IsNonExistent { get; }
+        public bool IsNonExistent { get; }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            return sb.ToString();
+        }
     }
 }

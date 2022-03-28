@@ -15,7 +15,6 @@ using System.IO;
 using System.Net;
 using System.Numerics;
 using NeteaseCloudMusicAPI.JsonBase.CommentBase;
-using System.Diagnostics;
 using System.Net.Http;
 
 namespace NeteaseCloudMusicAPI.Net
@@ -25,6 +24,9 @@ namespace NeteaseCloudMusicAPI.Net
     /// </summary>
     public partial class CloudMusicApi
     {
+        /// <summary>
+        /// Detail接口最大拉取数量
+        /// </summary>
         public const int MAX_DETAIL_REQUESTS_NUMBER = 1000;
         private const string _MODULUS = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
         private const string _NONCE = "0CoJUm6Qyw8W8jud";
@@ -85,10 +87,10 @@ namespace NeteaseCloudMusicAPI.Net
         /// <returns></returns>
         public ArtistResult Artist(in long artistId)
         {
-            var url = "https://music.163.com/weapi/v1/artist/" + artistId.ToString() + "?csrf_token=";
+            var url = $"https://music.163.com/weapi/v1/artist/{artistId}?csrf_token=";
             var data = new Dictionary<string, string>
             {
-                {"csrf_token", string.Empty}
+                ["csrf_token"] = string.Empty
             };
             var raw = CURL(url, Prepare(JsonConvert.SerializeObject(data)));
             
@@ -102,7 +104,7 @@ namespace NeteaseCloudMusicAPI.Net
         /// <returns></returns>
         public AlbumResult Album(in long albumId)
         {
-            string url = "https://music.163.com/weapi/v1/album/" + albumId.ToString() + "?csrf_token=";
+            string url = $"https://music.163.com/weapi/v1/album/{albumId}?csrf_token=";
             var data = new Dictionary<string, string> 
             {
                 { "csrf_token", string.Empty },
@@ -116,10 +118,10 @@ namespace NeteaseCloudMusicAPI.Net
         /// </summary>
         /// <param name="songId">音乐ID</param>
         /// <returns></returns>
-        public DetailResult Detail(in long songId)
+        public RawDetailsResult Details(in long songId)
         {
             string raw = CURL(ApiUrl.DETAIL_URL, GetDetailParams(songId));
-            return JsonConvert.DeserializeObject<DetailResult>(raw);
+            return JsonConvert.DeserializeObject<RawDetailsResult>(raw);
         }
         
         /// <summary>
@@ -127,10 +129,10 @@ namespace NeteaseCloudMusicAPI.Net
         /// </summary>
         /// <param name="songId">音乐ID</param>
         /// <returns></returns>
-        public async Task<DetailResult> DetailAsync(long songId)
+        public async Task<RawDetailsResult> DetailAsync(long songId)
         {
             var raw = await PostAsync(ApiUrl.DETAIL_URL, GetDetailParams(songId));
-            return JsonConvert.DeserializeObject<DetailResult>(raw);
+            return JsonConvert.DeserializeObject<RawDetailsResult>(raw);
         }
 
         /// <summary>
@@ -138,29 +140,35 @@ namespace NeteaseCloudMusicAPI.Net
         /// </summary>
         /// <param name="songId"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public DetailResultBatch DetailBatch(params long[] songId)
+        /// <exception cref="ArgumentOutOfRangeException">Id数超过MAX_DETAIL_REQUESTS_NUMBER</exception>
+        /// <exception cref="ArgumentNullException">songId为null</exception>
+        public DetailResultBatch DetailBatch(IEnumerable<long> songId)
         {
-            if (songId.Length > MAX_DETAIL_REQUESTS_NUMBER)
+            if (songId == null)
             {
-                throw new ArgumentOutOfRangeException($"超过最大请求数, 最大请求数={MAX_DETAIL_REQUESTS_NUMBER}");
+                throw new ArgumentNullException(nameof(songId));
             }
-            string raw = CURL(ApiUrl.DETAIL_URL, GetDetailBatchParams(songId));
+            if (songId.Count() > MAX_DETAIL_REQUESTS_NUMBER)
+            {
+                throw new ArgumentOutOfRangeException(nameof(songId),
+                    $"超过最大请求数, 最大请求数={MAX_DETAIL_REQUESTS_NUMBER}");
+            }
+            var raw = CURL(ApiUrl.DETAIL_URL, GetDetailBatchParams(songId));
             return JsonConvert.DeserializeObject<DetailResultBatch>(raw);
         }
         
-        private Dictionary<string, string> GetDetailBatchParams(params long[] songId)
+        private Dictionary<string, string> GetDetailBatchParams(IEnumerable<long> songId)
         {
             //TODO:效率很低,有空优化一下
-            var list = new List<Dictionary<string, long>>(songId.Length);
+            var list = new List<Dictionary<string, long>>(songId.Count());
             foreach (var i in songId)
             {
-                list.Add(new Dictionary<string, long>{{ "id", i }});
+                list.Add(new Dictionary<string, long>{["id"] = i});
             }
             var data = new Dictionary<string, string> 
             {
-                { "c", JsonConvert.SerializeObject(list) },
-                {"csrf_token", string.Empty}
+                ["c"] = JsonConvert.SerializeObject(list),
+                ["csrf_token"] = string.Empty
             };
             var json = JsonConvert.SerializeObject(data);
             return Prepare(json);
@@ -300,14 +308,12 @@ namespace NeteaseCloudMusicAPI.Net
             return deserialedObj;
         }
         
-
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="songId"></param>
         /// <returns></returns>
-        public async Task<DetailResultBatch> DetailBatchAsync(params long[] songId)
+        public async Task<DetailResultBatch> DetailBatchAsync(IEnumerable<long> songId)
         {
             var raw = await PostAsync(ApiUrl.DETAIL_URL, GetDetailBatchParams(songId));
             return JsonConvert.DeserializeObject<DetailResultBatch>(raw);

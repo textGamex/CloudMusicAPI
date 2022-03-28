@@ -254,7 +254,7 @@ namespace NeteaseCloudMusicAPI
         public List<HotSong> HotSongs { get; set; }
     }
 
-    public sealed class DetailResult
+    public sealed class RawDetailsResult
     {
         public Song[] Songs { get; set; }
         public Privilege[] Privileges { get; set; }

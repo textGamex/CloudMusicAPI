@@ -21,19 +21,34 @@ namespace NeteaseCloudMusicAPI.Api
             return new Lyrics(_api.Lyrics(songId));
         }
         
-        public static async Task<Lyrics> GetLyricAsync(long songId)
+        public static async Task<Lyrics> GetLyricsAsync(long songId)
         {
             return new Lyrics(await _api.LyricsAsync(songId));
         }
 
-        public static Detail GetDetails(long songId)
+        public static Details GetDetails(long songId)
         {
-            return new Detail(_api.Detail(songId));
+            return new Details(_api.Details(songId));
         }
         
-        public static async Task<Detail> GetDetailAsync(long songId)
+        public static async Task<Details> GetDetailsAsync(long songId)
         {
-            return new Detail(await _api.DetailAsync(songId));
+            return new Details(await _api.DetailAsync(songId));
+        }
+
+        public static List<Details> GetDetailsBatch(IEnumerable<long> songIds)
+        {
+            if (songIds == null)
+            {
+                throw new ArgumentNullException(nameof(songIds));
+            }
+            var data = _api.DetailBatch(songIds);
+            var list = new List<Details>(songIds.Count());
+            for (int i = 0; i < data.Songs.Count; ++i)
+            {
+                list.Add(new Details(data.Songs[i]));
+            }
+            return list;
         }
         
         /// <summary>
