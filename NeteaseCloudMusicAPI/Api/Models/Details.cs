@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NeteaseCloudMusicAPI.Net;
 using System.Collections.Specialized;
+using NeteaseCloudMusicAPI.Tools;
 
 namespace NeteaseCloudMusicAPI.Api.Models
 {
@@ -74,8 +75,37 @@ namespace NeteaseCloudMusicAPI.Api.Models
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder($"{GetType().Name}{{");
+            sb.Append("AuthorInfos=[");
+            int count = 0;
+            foreach (var key in AuthorInfos.AllKeys)
+            {
+                ++count;
+                sb.Append($"{{{key}={AuthorInfos[key]}}}");
+                if (count != AuthorInfos.Count)
+                {
+                    sb.Append(", ");
+                }
+            }
+            sb.Append("], ");
+            sb.Append($"SongName={SongName}, SongCover={SongCover}, SongAlbumId={SongAlbumId}, SongAlbumName={SongAlbumName}");
+            sb.Append(", Popularity=").Append(Popularity).Append('}');
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// 散列码
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            int result = AuthorInfos?.HashCode() ?? 0;
+            result = result * 31 + SongName?.GetHashCode() ?? 0;
+            result = result * 31 + SongCover?.GetHashCode() ?? 0;
+            result = result * 31 + SongAlbumName?.GetHashCode() ?? 0;
+            result = result * 31 + SongAlbumId.GetHashCode();
+            result = result * 31 + Popularity.GetHashCode();
+            return result;
         }
     }
 }

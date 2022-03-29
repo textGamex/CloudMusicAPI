@@ -235,10 +235,10 @@ namespace NeteaseCloudMusicAPI.Net
         /// </summary>
         /// <param name="songId">音乐ID</param>
         /// <returns></returns>
-        public LyricsResult Lyrics(in long songId)
+        public RawLyricsResult Lyrics(in long songId)
         {
             string raw = CURL(ApiUrl.LYRICS_URL, GetLyricsParams(songId));
-            return JsonConvert.DeserializeObject<LyricsResult>(raw);
+            return JsonConvert.DeserializeObject<RawLyricsResult>(raw);
         }
         
         protected Dictionary<string, string> GetLyricsParams(in long songId)
@@ -324,10 +324,10 @@ namespace NeteaseCloudMusicAPI.Net
         /// </summary>
         /// <param name="songId">音乐ID</param>
         /// <returns></returns>
-        public async Task<LyricsResult> LyricsAsync(long songId)
+        public async Task<RawLyricsResult> LyricsAsync(long songId)
         {
             string raw = await PostAsync(ApiUrl.LYRICS_URL, GetLyricsParams(songId));
-            return JsonConvert.DeserializeObject<LyricsResult>(raw);        
+            return JsonConvert.DeserializeObject<RawLyricsResult>(raw);        
         }
         
         private static async Task<string> PostAsync(string url, Dictionary<string, string> paramsValue)

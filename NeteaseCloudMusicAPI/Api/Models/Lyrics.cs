@@ -9,36 +9,8 @@ namespace NeteaseCloudMusicAPI.Api.Models
     /// <summary>
     /// 关于歌词的数据
     /// </summary>
-    public class Lyrics
+    public partial class Lyrics
     {
-        /// <summary>
-        /// 歌词贡献者的信息
-        /// </summary>
-        public class LyricsContributor
-        {
-            public LyricsContributor(string name, string timeStamp, long id)
-            {
-                Name = name;
-                UpTime = GetDateTime(timeStamp);
-                Id = id;
-            }
-
-            /// <summary>
-            /// 歌词贡献者
-            /// </summary>
-            public string Name { get; private set; }
-
-            /// <summary>
-            /// 上传时间
-            /// </summary>
-            public DateTime UpTime { get; private set; }
-
-            /// <summary>
-            /// 账号ID
-            /// </summary>
-            public long Id { get; private set; }
-        }
-
         /// <summary>
         /// 歌词贡献者的信息, 为<c>null</c>则代表没有
         /// </summary>
@@ -60,11 +32,16 @@ namespace NeteaseCloudMusicAPI.Api.Models
         public string Translation { get; private set; }
 
         /// <summary>
-        /// 是未收录的
+        /// 歌曲是未收录的
         /// </summary>
         public bool IsUncollected { get; private set; }
-
-        public Lyrics(LyricsResult data)
+        
+        /// <summary>
+        /// 没有歌词为true, 否则为false
+        /// </summary>
+        public bool IsNotHasLyrics { get; }
+        
+        public Lyrics(RawLyricsResult data)
         {
             if (data == null)
             {
@@ -72,36 +49,41 @@ namespace NeteaseCloudMusicAPI.Api.Models
             }
 
             IsUncollected = data.Uncollected;
+            IsNotHasLyrics = data.Nolyric;
             Lyric = data.Lrc?.Lyric ?? string.Empty;
             LyricKrc = data.Klyric?.lyric ?? string.Empty;
             Translation = data.Tlyric?.Lyric ?? string.Empty;
             if (data.LyricUser != null)
             {
                 LyricsContributorInfo = new LyricsContributor(data.LyricUser.Nickname,
-                    data.LyricUser.Uptime.ToString(), data.LyricUser.Id);
+                    data.LyricUser.Uptime.ToString(), data.LyricUser.Userid);
             }
             else
             {
                 LyricsContributorInfo = null;
             }
         }
+        
+        public override int GetHashCode()
+        {   
+            int result = LyricsContributorInfo?.GetHashCode() ?? 0;
+            result = result * 31 + IsUncollected.GetHashCode();
+            result = result * 31 + IsNotHasLyrics.GetHashCode();
+            result = result * 31 + Lyric.GetHashCode();
+            result = result * 31 + LyricKrc.GetHashCode();
+            result = result * 31 + Translation.GetHashCode();
+            return result;
+        }
 
-        /// <summary>
-        /// 时间戳转为C#格式时间
-        /// </summary>
-        /// <param name="timeStamp">时间戳</param>
-        /// <returns>C#格式时间</returns>
-        private static DateTime GetDateTime(string timeStamp)
+        // public override string ToString()
+        // {
+        //     return $"{GetType().Name}{{LyricsContributorInfo={LyricsContributorInfo},}}";
+        // }
+        public override string ToString()
         {
-            if (timeStamp.Length > 10)
-            {
-                timeStamp = timeStamp.Substring(0, 10);
-            }
-
-            DateTime dateTimeStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
-            long lTime = long.Parse(timeStamp + "0000000");
-            TimeSpan toNow = new TimeSpan(lTime);
-            return dateTimeStart.Add(toNow);
+            return $"{GetType().Name}{{{nameof(IsUncollected)}={IsUncollected}, " +
+                   $"{nameof(IsNotHasLyrics)}={IsNotHasLyrics}, {nameof(Lyric)}={Lyric}, {nameof(LyricKrc)}={LyricKrc}, " +
+                   $"{nameof(Translation)}={Translation}, {nameof(LyricsContributorInfo)}={LyricsContributorInfo}}}";
         }
     }
 }
