@@ -27,7 +27,7 @@ namespace CloudMusicAPI_Test.Api.Models
         {
             var detail = new Details(JsonConvert.DeserializeObject<RawDetailsResult>(TEST_DATA));
             
-            Assert.AreEqual("Details{AuthorInfos=[{石页=12200045}], SongName=如果星星能记得(Vocaloid), " +
+            Assert.AreEqual("Details{AuthorInfos=[{石页=12200045}], SongId=447309968, SongName=如果星星能记得(Vocaloid), " +
                             "SongCover=https://p4.music.126.net/CUMANQGhUXEjB-Db1CvSwQ==/109951162824061491.jpg, " +
                             "SongAlbumId=35060085, SongAlbumName=石页的V家曲, Popularity=75}", detail.ToString());
         }

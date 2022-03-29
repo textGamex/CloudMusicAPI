@@ -241,7 +241,7 @@ namespace NeteaseCloudMusicAPI.Net
             return JsonConvert.DeserializeObject<RawLyricsResult>(raw);
         }
         
-        protected Dictionary<string, string> GetLyricsParams(in long songId)
+        private Dictionary<string, string> GetLyricsParams(in long songId)
         {
             var data = new Dictionary<string, string> 
             {

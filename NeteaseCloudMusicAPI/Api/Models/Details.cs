@@ -22,6 +22,11 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// 歌曲名
         /// </summary>
         public string SongName { get; private set; }
+        
+        /// <summary>
+        /// 歌曲ID
+        /// </summary>
+        public long SongId { get; }
 
         /// <summary>
         /// 歌曲封面
@@ -59,6 +64,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
                 AuthorInfos.Add(item.Name, item.Id.ToString());
             }
 
+            SongId = song.Id;
             SongName = song.Name;
             SongCover = song.Al.PicUrl;
             SongAlbumId = song.Al.Id;
@@ -87,8 +93,9 @@ namespace NeteaseCloudMusicAPI.Api.Models
                     sb.Append(", ");
                 }
             }
-            sb.Append("], ");
-            sb.Append($"SongName={SongName}, SongCover={SongCover}, SongAlbumId={SongAlbumId}, SongAlbumName={SongAlbumName}");
+            sb.Append($"], {nameof(SongId)}={SongId}, ");
+            sb.Append($"{nameof(SongName)}={SongName}, SongCover={SongCover}, SongAlbumId={SongAlbumId}, " +
+                      $"SongAlbumName={SongAlbumName}");
             sb.Append(", Popularity=").Append(Popularity).Append('}');
             return sb.ToString();
         }
@@ -100,6 +107,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
         public override int GetHashCode()
         {
             int result = AuthorInfos?.HashCode() ?? 0;
+            result = result * 31 + SongId.GetHashCode();
             result = result * 31 + SongName?.GetHashCode() ?? 0;
             result = result * 31 + SongCover?.GetHashCode() ?? 0;
             result = result * 31 + SongAlbumName?.GetHashCode() ?? 0;
