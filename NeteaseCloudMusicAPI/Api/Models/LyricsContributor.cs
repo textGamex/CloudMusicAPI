@@ -1,6 +1,6 @@
 using System;
 
-namespace NeteaseCloudMusicAPI.Api.Models
+namespace NeteaseCloudMusicAPI.Api
 {
     public partial class Lyrics
     {

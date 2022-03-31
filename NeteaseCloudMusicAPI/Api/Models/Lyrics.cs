@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using NeteaseCloudMusicAPI.Api;
 using NeteaseCloudMusicAPI.Net;
 
-namespace NeteaseCloudMusicAPI.Api.Models
+namespace NeteaseCloudMusicAPI.Api
+
 {
     /// <summary>
     /// 关于歌词的数据

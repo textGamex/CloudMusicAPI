@@ -6,7 +6,8 @@ using NeteaseCloudMusicAPI.Net;
 using System.Collections.Specialized;
 using NeteaseCloudMusicAPI.Tools;
 
-namespace NeteaseCloudMusicAPI.Api.Models
+namespace NeteaseCloudMusicAPI.Api
+
 {
     /// <summary>
     /// 歌曲详情
@@ -56,6 +57,11 @@ namespace NeteaseCloudMusicAPI.Api.Models
         /// 热度
         /// </summary>
         public double Popularity { get; private set; }
+        
+        /// <summary>
+        /// 歌曲时长, 单位为毫秒
+        /// </summary>
+        public long SongTime { get; }
 
         public Details(Song song)
         {
@@ -70,6 +76,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
             SongAlbumId = song.Al.Id;
             SongAlbumName = song.Al.Name;
             Popularity = song.Pop;
+            SongTime = song.Dt;
         }
 
         public Details(RawDetailsResult data) : this(data.Songs[0]) {}
@@ -96,7 +103,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
             sb.Append($"], {nameof(SongId)}={SongId}, ");
             sb.Append($"{nameof(SongName)}={SongName}, SongCover={SongCover}, SongAlbumId={SongAlbumId}, " +
                       $"SongAlbumName={SongAlbumName}");
-            sb.Append(", Popularity=").Append(Popularity).Append('}');
+            sb.Append(", Popularity=").Append(Popularity).Append($", {nameof(SongTime)}={SongTime}").Append('}');
             return sb.ToString();
         }
 
@@ -113,6 +120,7 @@ namespace NeteaseCloudMusicAPI.Api.Models
             result = result * 31 + SongAlbumName?.GetHashCode() ?? 0;
             result = result * 31 + SongAlbumId.GetHashCode();
             result = result * 31 + Popularity.GetHashCode();
+            result = result * 31 + SongTime.GetHashCode();
             return result;
         }
     }

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using NeteaseCloudMusicAPI.Net;
-using NeteaseCloudMusicAPI.Api.Models;
+using NeteaseCloudMusicAPI.Api;
 
 namespace NeteaseCloudMusicAPI.Api
 {
@@ -40,7 +40,7 @@ namespace NeteaseCloudMusicAPI.Api
         }
 
         /// <summary>
-        /// 
+        /// 获得<see cref="Details"/>
         /// </summary>
         /// <param name="songId">歌曲ID</param>
         /// <returns></returns>
@@ -51,7 +51,7 @@ namespace NeteaseCloudMusicAPI.Api
         }
         
         /// <summary>
-        /// 
+        /// 异步获得<see cref="Details"/>
         /// </summary>
         /// <param name="songId">歌曲ID</param>
         /// <returns></returns>
@@ -62,7 +62,7 @@ namespace NeteaseCloudMusicAPI.Api
         }
 
         /// <summary>
-        /// 
+        /// 批量异步获得<see cref="Details"/>列表
         /// </summary>
         /// <param name="songIds">歌曲ID</param>
         /// <returns></returns>
