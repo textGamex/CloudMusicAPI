@@ -1,5 +1,5 @@
 ﻿using System;
-using NeteaseCloudMusicAPI.Api.Models;
+using NeteaseCloudMusicAPI.Api;
 using NeteaseCloudMusicAPI;
 using Newtonsoft.Json;
 using NUnit.Framework;

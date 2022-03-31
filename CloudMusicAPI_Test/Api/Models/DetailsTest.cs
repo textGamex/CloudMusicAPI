@@ -1,6 +1,6 @@
 using System.IO;
 using NeteaseCloudMusicAPI;
-using NeteaseCloudMusicAPI.Api.Models;
+using NeteaseCloudMusicAPI.Api;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -21,6 +21,21 @@ namespace CloudMusicAPI_Test.Api.Models
             "\"Privilege\":null}],\"Privileges\":[{\"Id\":447309968,\"Fee\":0,\"Payed\":0,\"St\":0,\"Pl\":320000," +
             "\"Dl\":999000,\"Sp\":7,\"Cp\":1,\"Subp\":1,\"Cs\":false,\"Maxbr\":999000,\"Fl\":320000,\"Toast\":false," +
             "\"Flag\":2}],\"Code\":200}";
+
+        [Test]
+        public void GetValueTest()
+        {
+            var detail = new Details(JsonConvert.DeserializeObject<RawDetailsResult>(TEST_DATA));
+            
+            Assert.AreEqual(447309968, detail.SongId);
+            Assert.AreEqual("如果星星能记得(Vocaloid)", detail.SongName);
+            Assert.AreEqual("https://p4.music.126.net/CUMANQGhUXEjB-Db1CvSwQ==/109951162824061491.jpg",
+                detail.SongCover);
+            Assert.AreEqual(35060085, detail.SongAlbumId);
+            Assert.AreEqual("石页的V家曲", detail.SongAlbumName);
+            Assert.AreEqual(75, detail.Popularity);
+            Assert.AreEqual(157506, detail.SongTime);
+        }
         
         [Test]
         public void TestToString()
@@ -29,7 +44,8 @@ namespace CloudMusicAPI_Test.Api.Models
             
             Assert.AreEqual("Details{AuthorInfos=[{石页=12200045}], SongId=447309968, SongName=如果星星能记得(Vocaloid), " +
                             "SongCover=https://p4.music.126.net/CUMANQGhUXEjB-Db1CvSwQ==/109951162824061491.jpg, " +
-                            "SongAlbumId=35060085, SongAlbumName=石页的V家曲, Popularity=75}", detail.ToString());
+                            "SongAlbumId=35060085, SongAlbumName=石页的V家曲, Popularity=75, SongTime=157506}",
+                detail.ToString());
         }
     }
 }
