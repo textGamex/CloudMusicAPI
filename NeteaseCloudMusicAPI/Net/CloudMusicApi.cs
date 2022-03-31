@@ -267,7 +267,7 @@ namespace NeteaseCloudMusicAPI.Net
         {
             //! 网易云音乐Web版现在正在使用的API
             //string newApi = $"https://music.163.com/weapi/comment/resource/comments/get?csrf_token=";
-            //! GET的评论API
+            //! GET类型的评论API
             //string getApi = $"https://music.163.com/api/v1/resource/comments/R_SO_4_{songId}?offset=1&limit=100";
 
             string url = $"https://music.163.com/weapi/v1/resource/comments/R_SO_4_{songId}/?csrf_token=";

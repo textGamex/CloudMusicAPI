@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -16,26 +17,57 @@ namespace NeteaseCloudMusicAPI.Api
     {
         private static readonly CloudMusicApi _api = new CloudMusicApi();
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="songId">歌曲ID</param>
+        /// <exception cref="WebException"></exception>
+        /// <returns></returns>
         public static Lyrics GetLyrics(long songId)
         {
             return new Lyrics(_api.Lyrics(songId));
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="songId">歌曲ID</param>
+        /// <exception cref="WebException"></exception>
+        /// <returns></returns>
         public static async Task<Lyrics> GetLyricsAsync(long songId)
         {
             return new Lyrics(await _api.LyricsAsync(songId));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="songId">歌曲ID</param>
+        /// <returns></returns>
+        /// <exception cref="WebException"></exception>
         public static Details GetDetails(long songId)
         {
             return new Details(_api.Details(songId));
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="songId">歌曲ID</param>
+        /// <returns></returns>
+        /// <exception cref="WebException"></exception>
         public static async Task<Details> GetDetailsAsync(long songId)
         {
             return new Details(await _api.DetailAsync(songId));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="songIds">歌曲ID</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="WebException"></exception>
         public static List<Details> GetDetailsBatch(IEnumerable<long> songIds)
         {
             if (songIds == null)
