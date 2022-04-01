@@ -46,6 +46,37 @@ namespace NeteaseCloudMusicAPI.JsonBase
         public long CommentCount { get; set; }
     }
 
+    public sealed class User
+    {
+        public bool DefaultAvatar { get; set; }
+        public long Province { get; set; }
+        public long AuthStatus { get; set; }
+        public bool Followed { get; set; }
+        public string AvatarUrl { get; set; }
+        public long AccountStatus { get; set; }
+        public long Gender { get; set; }
+        public long City { get; set; }
+        public long Birthday { get; set; }
+        public long UserId { get; set; }
+        public long UserType { get; set; }
+        public string Nickname { get; set; }
+        public string Signature { get; set; }
+        public string Description { get; set; }
+        public string DetailDescription { get; set; }
+        public long AvatarImgId { get; set; }
+        public long BackgroundImgId { get; set; }
+        public string BackgroundUrl { get; set; }
+        public long Authority { get; set; }
+        public bool Mutual { get; set; }
+        public object ExpertTags { get; set; }
+        public object Experts { get; set; }
+        public long DjStatus { get; set; }
+        public long VipType { get; set; }
+        public object RemarkName { get; set; }
+        public string BackgroundImgIdStr { get; set; }
+        public string AvatarImgIdStr { get; set; }
+    }
+
     public sealed class Track
     {
         public string Name { get; set; }
