@@ -1,6 +1,6 @@
 ﻿using System;
 using NeteaseCloudMusicAPI.Api;
-using NeteaseCloudMusicAPI;
+using NeteaseCloudMusicAPI.JsonBase;
 using Newtonsoft.Json;
 using NUnit.Framework;
 

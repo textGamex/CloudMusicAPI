@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using NeteaseCloudMusicAPI.Net;
+using NeteaseCloudMusicAPI.JsonBase;
 using System.Collections.Specialized;
 using NeteaseCloudMusicAPI.Tools;
 

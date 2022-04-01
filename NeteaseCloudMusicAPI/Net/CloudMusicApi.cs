@@ -14,7 +14,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Net;
 using System.Numerics;
-using NeteaseCloudMusicAPI.JsonBase.CommentBase;
+using NeteaseCloudMusicAPI.JsonBase;
 using System.Net.Http;
 
 namespace NeteaseCloudMusicAPI.Net

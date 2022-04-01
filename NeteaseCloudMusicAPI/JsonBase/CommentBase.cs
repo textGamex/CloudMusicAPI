@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NeteaseCloudMusicAPI.JsonBase.CommentBase
+#pragma warning disable CS1591 // 缺少对公共可见类型或成员的 XML 注释
+
+namespace NeteaseCloudMusicAPI.JsonBase
 {
     public partial class CommentResult
     {
@@ -46,27 +48,6 @@ namespace NeteaseCloudMusicAPI.JsonBase.CommentBase
         public string Content { get; set; }
         public long Status { get; set; }
         public object ExpressionUrl { get; set; }
-    }
-
-    public partial class User
-    {
-        public object LocationInfo { get; set; }
-        public object LiveInfo { get; set; }
-        public long Anonym { get; set; }
-        public object CommonIdentity { get; set; }
-        public long UserId { get; set; }
-        public AvatarDetail AvatarDetail { get; set; }
-        public long UserType { get; set; }
-        public object ExpertTags { get; set; }
-        public object Experts { get; set; }
-        public long VipType { get; set; }
-        public bool Followed { get; set; }
-        public bool Mutual { get; set; }
-        public object RemarkName { get; set; }
-        public VipRights VipRights { get; set; }
-        public string Nickname { get; set; }
-        public Uri AvatarUrl { get; set; }
-        public long AuthStatus { get; set; }
     }
 
     public partial class AvatarDetail

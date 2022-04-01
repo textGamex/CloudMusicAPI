@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using NeteaseCloudMusicAPI.Api;
 using NeteaseCloudMusicAPI.Net;
+using NeteaseCloudMusicAPI.JsonBase;
 
 namespace NeteaseCloudMusicAPI.Api
 
